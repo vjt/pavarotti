@@ -1,6 +1,6 @@
 #!/bin/bash
-# tts <out.ogg> < testo — sintetizza con piper, esce OGG/Opus (il formato dei vocali Telegram).
-# TTS_VOICE (default it_IT-paola-medium): piper-voices/$TTS_VOICE.onnx, la scarica setup.sh.
+# tts <out.ogg> < text — synthesize with piper, writes OGG/Opus (the Telegram voice-note format).
+# TTS_VOICE (default it_IT-paola-medium): piper-voices/$TTS_VOICE.onnx, fetched by setup.sh.
 set -euo pipefail
 V=$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)
 [ -f "$V/voice.env" ] && . "$V/voice.env"

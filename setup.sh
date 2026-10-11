@@ -1,6 +1,6 @@
 #!/bin/bash
-# setup.sh — costruisce le immagini docker e scarica il modello whisper e una voce piper.
-# Idempotente: quello che c'e' gia' non si riscarica. STT_MODEL e TTS_VOICE come in bin/.
+# setup.sh — build the docker images, fetch the whisper model and a piper voice.
+# Idempotent: whatever is already there is not fetched again. STT_MODEL and TTS_VOICE as in bin/.
 set -euo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 [ -f voice.env ] && . ./voice.env

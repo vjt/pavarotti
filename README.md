@@ -1,31 +1,30 @@
-# pavarotti — vocali in locale per bot Telegram
+# pavarotti — local voice notes for Telegram bots
 
-Trascrizione (whisper.cpp) e sintesi (piper) in docker, tutto sulla macchina: nessun
-servizio esterno, e sull'host non entra codice di terzi. Pensato per un Raspberry Pi 5:
-mezzo minuto di vocale si trascrive in 10-15 s col modello small, una risposta si sintetizza
-in ~5 s.
+Speech-to-text (whisper.cpp) and text-to-speech (piper) in docker, all on the machine: no
+external services, and no third-party code on the host. Built for a Raspberry Pi 5: half a
+minute of voice note transcribes in 10-15 s with the small model, a reply synthesizes in ~5 s.
 
 ```
-./setup.sh                          # immagini docker + modello whisper + voce piper
-bin/stt vocale.oga                  # testo su stdout
-bin/tts risposta.ogg < testo.txt    # OGG/Opus, il formato dei vocali Telegram
-bin/tg-voice get <file_id>          # scarica un vocale dalla Bot API e lo trascrive
-bin/tg-voice send <chat_id> r.ogg   # lo manda come vocale
+./setup.sh                          # docker images + whisper model + piper voice
+bin/stt note.oga                    # text on stdout
+bin/tts reply.ogg < text.txt        # OGG/Opus, the Telegram voice-note format
+bin/tg-voice get <file_id>          # download a voice note from the Bot API and transcribe it
+bin/tg-voice send <chat_id> r.ogg   # send it as a voice note
 ```
 
-Impostazioni da variabili d'ambiente, o da un `voice.env` accanto a questo file (fuori dal
-repo, lo leggono tutti gli script):
+Settings come from environment variables, or from a `voice.env` next to this file (kept out
+of the repo, every script reads it):
 
-| variabile | default | |
+| variable | default | |
 |---|---|---|
-| `STT_LANG` | `it` | lingua per whisper |
+| `STT_LANG` | `it` | whisper language |
 | `STT_MODEL` | `small` | `models/ggml-$STT_MODEL.bin` |
 | `STT_THREADS` | `4` | |
-| `TTS_VOICE` | `it_IT-paola-medium` | `piper-voices/$TTS_VOICE.onnx`, catalogo su [rhasspy/piper-voices](https://huggingface.co/rhasspy/piper-voices) |
-| `TG_TOKEN_FILE` | — | file con il solo token del bot, per `tg-voice` |
+| `TTS_VOICE` | `it_IT-paola-medium` | `piper-voices/$TTS_VOICE.onnx`, catalog at [rhasspy/piper-voices](https://huggingface.co/rhasspy/piper-voices) |
+| `TG_TOKEN_FILE` | — | file holding only the bot token, for `tg-voice` |
 
-`skill/SKILL.md` e' la skill per Claude Code: linkala in `.claude/skills/voice/` del
-progetto del bot.
+`skill/SKILL.md` is the Claude Code skill: link it into `.claude/skills/voice/` of the bot's
+project.
 
-Se un `docker image prune` si porta via le immagini, `./setup.sh` le ricostruisce; modelli
-e voci gia' scaricati restano.
+If a `docker image prune` takes the images away, `./setup.sh` rebuilds them; models and
+voices already downloaded stay.

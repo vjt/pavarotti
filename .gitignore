@@ -1,4 +1,4 @@
-# Dati e modelli: si scaricano con setup.sh, o sono roba personale.
+# Data and models: fetched by setup.sh, or personal.
 /data/
 /models/
 /piper-voices/

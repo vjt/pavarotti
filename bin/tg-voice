@@ -1,12 +1,12 @@
 #!/bin/bash
-# tg-voice — vocali Telegram via Bot API, per i bot che non hanno un bridge che lo fa.
-#   tg-voice get <file_id>            scarica il vocale e lo trascrive (testo su stdout)
-#   tg-voice send <chat_id> <file.ogg> manda un OGG/Opus come vocale
-# Token: TG_TOKEN_FILE, un file che contiene solo il token del bot.
+# tg-voice — Telegram voice notes over the Bot API, for bots without a bridge doing it.
+#   tg-voice get <file_id>            download the voice note and transcribe it (text on stdout)
+#   tg-voice send <chat_id> <file.ogg> send an OGG/Opus as a voice note
+# Token: TG_TOKEN_FILE, a file holding only the bot token.
 set -euo pipefail
 V=$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)
 [ -f "$V/voice.env" ] && . "$V/voice.env"
-: "${TG_TOKEN_FILE:?TG_TOKEN_FILE non impostato}"
+: "${TG_TOKEN_FILE:?TG_TOKEN_FILE not set}"
 api="https://api.telegram.org"; tok=$(<"$TG_TOKEN_FILE")
 case "${1:-}" in
   get)

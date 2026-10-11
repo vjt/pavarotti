@@ -1,4 +1,4 @@
-# whisper.cpp compilato dentro l'immagine: sull'host non entra codice di terzi.
+# whisper.cpp is compiled inside the image: no third-party code on the host.
 FROM debian:bookworm-slim AS build
 RUN apt-get update && apt-get install -y --no-install-recommends \
       build-essential cmake git ca-certificates && rm -rf /var/lib/apt/lists/*

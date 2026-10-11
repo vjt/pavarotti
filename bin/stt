@@ -1,5 +1,5 @@
 #!/bin/bash
-# stt <audio> — trascrive, testo su stdout. whisper.cpp in docker (immagine voice-whisper).
+# stt <audio> — transcribe, text on stdout. whisper.cpp in docker (image voice-whisper).
 # STT_LANG (default it), STT_MODEL (default small: models/ggml-small.bin), STT_THREADS (4).
 set -euo pipefail
 V=$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)

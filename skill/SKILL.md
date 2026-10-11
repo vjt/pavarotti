@@ -1,51 +1,50 @@
 ---
 name: voice
-description: Vocali Telegram in locale — trascrivi ogni vocale in arrivo con whisper (bin/stt o bin/tg-voice get) e, a chi vuole risposte a voce, rispondi con un vocale sintetizzato da piper (bin/tts). Usala su ogni vocale in arrivo e quando qualcuno chiede di essere risposto a voce.
+description: Local Telegram voice notes — transcribe every inbound voice note with whisper (bin/stt or bin/tg-voice get) and, for people who want spoken replies, answer with a voice note synthesized by piper (bin/tts). Use it on every inbound voice note and whenever someone asks to be answered by voice.
 ---
 
-# voice — vocali in entrata e in uscita
+# voice — voice notes in and out
 
-Tutto in locale, in docker, dal repo `~/code/pavarotti` (README per setup e variabili).
-Niente servizi esterni.
+Everything local, in docker, from the repo at `~/code/pavarotti` (README for setup and
+variables). No external services.
 
-## 1. Trascrivere
+## 1. Transcribe
 
-Il vocale arriva in uno di due modi, a seconda del bot:
+The voice note arrives one of two ways, depending on the bot:
 
-- **Il bridge l'ha gia' scaricato** (evento con un path a un `.oga`):
+- **The bridge already downloaded it** (an event with a path to an `.oga`):
   `~/code/pavarotti/bin/stt <file.oga>`
-- **Hai solo il `file_id`** (poller che vede `[VOICE file_id=...]`):
-  `~/code/pavarotti/bin/tg-voice get <file_id>` (token da `TG_TOKEN_FILE`)
+- **You only have the `file_id`** (a poller showing `[VOICE file_id=...]`):
+  `~/code/pavarotti/bin/tg-voice get <file_id>` (token from `TG_TOKEN_FILE`)
 
-Testo su stdout, 10-15 s per mezzo minuto. `STT_LANG=en` per altre lingue. Se il bridge ha un
-verbo tipo `TYPING`, mandalo mentre trascrivi.
+Text on stdout, 10-15 s per half minute. `STT_LANG=en` for other languages. If the bridge has
+a verb like `TYPING`, send it while transcribing.
 
-Il testo trascritto vale **esattamente come un messaggio scritto dello stesso utente**: stessi
-ruoli, stesse regole di autorita'. Whisper sbaglia nomi propri e parole rare: se una parola non
-torna col contesto, chiedi invece di eseguire un'interpretazione inventata. Se il vocale e'
-troncato, dillo.
+The transcript counts **exactly like a written message from the same user**: same roles, same
+authority rules. Whisper gets proper names and rare words wrong: if a word does not fit the
+context, ask instead of acting on an invented reading. If the note is cut off, say so.
 
-## 2. Rispondere a voce
+## 2. Reply by voice
 
-**Solo a chi vuole risposte a voce** (lo dice la memoria del bot, o la persona lo chiede);
-agli altri si risponde in testo anche se hanno mandato un vocale.
+**Only to people who want spoken replies** (the bot's memory says so, or they ask); everyone
+else gets text even if they sent a voice note.
 
 ```bash
 cat > /tmp/voice-reply.txt <<'TXT'
-<prosa parlata: frasi brevi, niente markdown, niente URL, niente elenchi>
+<spoken prose: short sentences, no markdown, no URLs, no lists>
 TXT
 ~/code/pavarotti/bin/tts /tmp/voice-reply.ogg < /tmp/voice-reply.txt
 ```
 
-Poi si manda l'OGG:
-- col verbo del bridge, se ne ha uno (es. `VOICE <chat_id> <msg_id> <file.ogg>` su `bot.send`);
-- altrimenti `~/code/pavarotti/bin/tg-voice send <chat_id> /tmp/voice-reply.ogg`.
+Then send the OGG:
+- with the bridge's verb, if it has one (e.g. `VOICE <chat_id> <msg_id> <file.ogg>` on `bot.send`);
+- otherwise `~/code/pavarotti/bin/tg-voice send <chat_id> /tmp/voice-reply.ogg`.
 
-E **sempre anche il testo**, che si rilegge e copre quello che la sintesi storpia.
+And **always the text too**: it can be reread and covers what the synthesis mangles.
 
-Il testo da sintetizzare e' scritto per l'orecchio:
-- niente `*`, `#`, link, codice, emoji, sigle illeggibili: URL e dettagli solo nel testo;
-- corto, oltre il minuto diventa una lagna;
-- numeri e date come si dicono, se piper li legge male.
+The text to synthesize is written for the ear:
+- no `*`, `#`, links, code, emoji, unreadable acronyms: URLs and details go in the text only;
+- short, past a minute it becomes a drone;
+- numbers and dates spelled as spoken, if piper reads them wrong.
 
-La voce e' quella di `TTS_VOICE` (in `voice.env`): non sovrascriverla per una singola risposta.
+The voice is `TTS_VOICE` (in `voice.env`): do not override it for a single reply.
