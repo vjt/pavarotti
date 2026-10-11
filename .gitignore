@@ -1,0 +1,6 @@
+# Dati e modelli: si scaricano con setup.sh, o sono roba personale.
+/data/
+/models/
+/piper-voices/
+/whisper.cpp/
+/voice.env

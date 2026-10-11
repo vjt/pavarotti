@@ -1,0 +1,11 @@
+#!/bin/bash
+# tts <out.ogg> < testo — sintetizza con piper, esce OGG/Opus (il formato dei vocali Telegram).
+# TTS_VOICE (default it_IT-paola-medium): piper-voices/$TTS_VOICE.onnx, la scarica setup.sh.
+set -euo pipefail
+V=$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)
+[ -f "$V/voice.env" ] && . "$V/voice.env"
+out=$(readlink -f "$1"); dir=$(dirname "$out"); base=$(basename "$out")
+voice=${TTS_VOICE:-it_IT-paola-medium}
+docker run --rm -i --user "$(id -u):$(id -g)" -v "$V/piper-voices:/v:ro" -v "$dir:/out" voice-piper bash -c "
+  python -m piper -m /v/$voice.onnx -f /tmp/a.wav 2>/dev/null &&
+  ffmpeg -nostdin -loglevel error -y -i /tmp/a.wav -c:a libopus -b:a 32k '/out/$base'"

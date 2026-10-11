@@ -1,0 +1,11 @@
+#!/bin/bash
+# stt <audio> — trascrive, testo su stdout. whisper.cpp in docker (immagine voice-whisper).
+# STT_LANG (default it), STT_MODEL (default small: models/ggml-small.bin), STT_THREADS (4).
+set -euo pipefail
+V=$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)
+[ -f "$V/voice.env" ] && . "$V/voice.env"
+in=$(readlink -f "$1"); dir=$(dirname "$in"); base=$(basename "$in")
+model=ggml-${STT_MODEL:-small}.bin
+docker run --rm --user "$(id -u):$(id -g)" -v "$V/models:/m:ro" -v "$dir:/in:ro" voice-whisper bash -c "
+  ffmpeg -nostdin -loglevel error -y -i '/in/$base' -ar 16000 -ac 1 /tmp/a.wav &&
+  whisper-cli -m /m/$model -f /tmp/a.wav -l ${STT_LANG:-it} -t ${STT_THREADS:-4} -np -nt 2>/dev/null" | sed 's/^ *//'
