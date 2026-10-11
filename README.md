@@ -1,4 +1,4 @@
-# .voice — vocali in locale per bot Telegram
+# pavarotti — vocali in locale per bot Telegram
 
 Trascrizione (whisper.cpp) e sintesi (piper) in docker, tutto sulla macchina: nessun
 servizio esterno, e sull'host non entra codice di terzi. Pensato per un Raspberry Pi 5:

@@ -5,7 +5,7 @@ description: Vocali Telegram in locale — trascrivi ogni vocale in arrivo con w
 
 # voice — vocali in entrata e in uscita
 
-Tutto in locale, in docker, dal repo `~/code/.voice` (README per setup e variabili).
+Tutto in locale, in docker, dal repo `~/code/pavarotti` (README per setup e variabili).
 Niente servizi esterni.
 
 ## 1. Trascrivere
@@ -13,9 +13,9 @@ Niente servizi esterni.
 Il vocale arriva in uno di due modi, a seconda del bot:
 
 - **Il bridge l'ha gia' scaricato** (evento con un path a un `.oga`):
-  `~/code/.voice/bin/stt <file.oga>`
+  `~/code/pavarotti/bin/stt <file.oga>`
 - **Hai solo il `file_id`** (poller che vede `[VOICE file_id=...]`):
-  `~/code/.voice/bin/tg-voice get <file_id>` (token da `TG_TOKEN_FILE`)
+  `~/code/pavarotti/bin/tg-voice get <file_id>` (token da `TG_TOKEN_FILE`)
 
 Testo su stdout, 10-15 s per mezzo minuto. `STT_LANG=en` per altre lingue. Se il bridge ha un
 verbo tipo `TYPING`, mandalo mentre trascrivi.
@@ -34,12 +34,12 @@ agli altri si risponde in testo anche se hanno mandato un vocale.
 cat > /tmp/voice-reply.txt <<'TXT'
 <prosa parlata: frasi brevi, niente markdown, niente URL, niente elenchi>
 TXT
-~/code/.voice/bin/tts /tmp/voice-reply.ogg < /tmp/voice-reply.txt
+~/code/pavarotti/bin/tts /tmp/voice-reply.ogg < /tmp/voice-reply.txt
 ```
 
 Poi si manda l'OGG:
 - col verbo del bridge, se ne ha uno (es. `VOICE <chat_id> <msg_id> <file.ogg>` su `bot.send`);
-- altrimenti `~/code/.voice/bin/tg-voice send <chat_id> /tmp/voice-reply.ogg`.
+- altrimenti `~/code/pavarotti/bin/tg-voice send <chat_id> /tmp/voice-reply.ogg`.
 
 E **sempre anche il testo**, che si rilegge e copre quello che la sintesi storpia.
 
