@@ -7,6 +7,13 @@ cd "$(dirname "$(readlink -f "$0")")"
 docker build -t voice-whisper docker-whisper
 docker build -t voice-piper docker-piper
 
+# `docker image prune -a` drops every image no container refers to. A created, never-started
+# container per image pins it at zero cost; recreated so it points at the image just built.
+for i in voice-whisper voice-piper; do
+  docker rm -f "$i-pin" >/dev/null 2>&1 || true
+  docker create --name "$i-pin" "$i" true >/dev/null
+done
+
 fetch() { [ -s "$2" ] || { curl -fL --progress-bar -o "$2.part" "$1" && mv "$2.part" "$2"; }; }
 
 m=ggml-${STT_MODEL:-small}.bin

@@ -26,5 +26,6 @@ of the repo, every script reads it):
 `skill/SKILL.md` is the Claude Code skill: link it into `.claude/skills/voice/` of the bot's
 project.
 
-If a `docker image prune` takes the images away, `./setup.sh` rebuilds them; models and
-voices already downloaded stay.
+`setup.sh` also creates a stopped container per image (`voice-whisper-pin`, `voice-piper-pin`)
+so that `docker image prune -a` leaves the images alone. If they go anyway, `./setup.sh`
+rebuilds them; models and voices already downloaded stay.
